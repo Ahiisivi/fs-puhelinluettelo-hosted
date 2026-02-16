@@ -13,6 +13,8 @@ app.use(morgan(':method :url :status :res[content-length] - :response-time ms :b
 
 app.use(cors())
 
+app.use(express.static('dist'))
+
 let persons = [
     { 
       "id": "1",
@@ -36,10 +38,6 @@ let persons = [
     }
 ]
 
-/* app.get('/', (request, response) => {
-  response.send('<h1>Hello from puhelinluettelo backend</h1>')
-}) */
-
 app.get('/api/persons/', (request, response) => {
     response.json(persons)
 })
@@ -61,8 +59,6 @@ app.get('/api/persons/:id', (request, response) => {
     response.status(404).end()
   }
 })
-
-app.use(express.static('dist'))
 
 app.delete('/api/persons/:id', (request, response) => {
   const id = request.params.id
