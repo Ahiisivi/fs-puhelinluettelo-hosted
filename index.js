@@ -5,6 +5,7 @@ const app = express()
 const cors = require('cors')
 const Person = require('./models/person')
 
+
 morgan.token('body', (req) => {
   return JSON.stringify(req.body)
 })
@@ -73,6 +74,25 @@ app.post('/api/persons/', (request, response) => {
   person.save().then(savedPerson => {
     response.json(savedPerson)
   })
+})
+
+app.put('/api/persons/:id', (request, response, next) => {
+  const body = request.body
+
+  const person = {
+    name: body.name,
+    number: body.number,
+  }
+  
+  Person.findByIdAndUpdate(request.params.id, person, {returnDocument: 'after'})
+    .then(updatedPerson => {
+      if(updatedPerson) {
+        response.json(updatedPerson)
+      } else {
+        response.status(404).end()
+      }
+    })
+    .catch(error => next(error))
 })
 
 const errorHandler = (error, request, response, next) => {
