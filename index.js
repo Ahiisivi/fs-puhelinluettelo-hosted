@@ -24,12 +24,17 @@ app.get('/api/persons/', (request, response) => {
     })
 })
 
-/* app.get('/info', (request, response) => {
-    const personsCount = persons.length
-    const timeStamp = new Date()
-    response.send(`<p>The phonebook has info about ${personsCount} persons</p>
-                    <p>The date is: ${timeStamp}</p>`)
-}) */
+app.get('/info', (request, response, next) => {
+    Person.countDocuments({})
+      .then(count => {
+        const timeNow = new Date()
+        response.send(
+          `<p>The Phonebook has info aboout ${count} persons</p>
+          <p>${timeNow}</p>`
+        )
+      })
+      .catch(error => next(error))
+})
 
 app.get('/api/persons/:id', (request, response, next) => {
   Person.findById(request.params.id)
